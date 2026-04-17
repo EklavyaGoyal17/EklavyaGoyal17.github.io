@@ -6,928 +6,1071 @@
 <title>Eklavya Goyal | Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
-:root {
-  --red: #e3001b;
-  --red2: #ff1f3d;
-  --blue: #0b1f5c;
-  --blue2: #1a3a9e;
-  --web: rgba(220,220,200,0.18);
-  --web-bright: rgba(255,255,220,0.55);
-  --bg: #07080f;
-  --surface: rgba(10,14,30,0.85);
-  --border: rgba(255,255,255,0.07);
-  --text: #dde3f0;
-  --muted: #7a8aaa;
-  --em: #ff1f3d;
-  --em2: #4a90e2;
+:root{
+  --red:#d90012;--red2:#ff1f3d;--red3:#ff5569;
+  --blue:#0a1a5c;--blue2:#1432a0;--blue3:#2a50d0;
+  --bg:#06070e;--surface:rgba(8,10,22,0.9);
+  --border:rgba(255,255,255,0.06);--border-red:rgba(217,0,18,0.25);
+  --text:#dde3f4;--muted:#6a7a9a;--muted2:#9aaac0;
+  --web:rgba(230,225,195,0.5);
+  --gold:#c8a84b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Rajdhani',sans-serif;
-  overflow-x:hidden;
-  cursor:none;
+  background:var(--bg);color:var(--text);
+  font-family:'Oswald',sans-serif;
+  overflow-x:hidden;cursor:none;
 }
 
-/* ── Canvas bg ── */
-#spidey-canvas{
-  position:fixed;inset:0;
-  z-index:0;
-  pointer-events:none;
+/* ── CURSOR ── */
+#cur,#cur-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur{
+  width:8px;height:8px;background:var(--red2);border-radius:50%;
+  box-shadow:0 0 12px var(--red2),0 0 24px rgba(255,31,61,.4);
+  transition:width .15s,height .15s,background .15s;
+}
+#cur-ring{
+  width:32px;height:32px;
+  border:1.5px solid rgba(255,31,61,.5);border-radius:50%;
+  transition:width .2s,height .2s;
+}
+body:has(a:hover,button:hover) #cur{width:12px;height:12px;background:var(--gold);}
+body:has(a:hover,button:hover) #cur-ring{width:44px;height:44px;border-color:var(--gold);}
+
+/* ── CANVAS ── */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ── NOISE ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.5;
 }
 
-/* ── Cursor: web crosshair ── */
-.cur{
-  position:fixed;width:18px;height:18px;
-  pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);
-  transition:transform .08s;
-}
-.cur::before,.cur::after{
-  content:'';position:absolute;
-  background:var(--red2);
-  border-radius:2px;
-}
-.cur::before{width:2px;height:18px;left:8px;top:0}
-.cur::after{width:18px;height:2px;top:8px;left:0}
-.cur-dot{
-  position:fixed;width:6px;height:6px;
-  background:var(--red2);border-radius:50%;
-  pointer-events:none;z-index:9999;
-  transform:translate(-50%,-50%);
-  box-shadow:0 0 10px var(--red2);
-}
-
-/* ── Web overlay texture ── */
-.web-overlay{
-  position:fixed;inset:0;z-index:1;
-  pointer-events:none;
-  opacity:.025;
-  background-image:
-    repeating-linear-gradient(0deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.3) 1px,transparent 1px,transparent 60px),
-    repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.3) 1px,transparent 1px,transparent 60px);
-}
-
-/* ── Nav ── */
+/* ── NAV ── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:200;
   display:flex;justify-content:space-between;align-items:center;
-  padding:.9rem 2.5rem;
-  background:rgba(7,8,15,.75);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(227,0,27,.2);
+  padding:.85rem 3rem;
+  background:rgba(6,7,14,.8);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-red);
 }
 .nav-logo{
-  font-family:'Bangers',cursive;
-  font-size:1.5rem;
-  letter-spacing:.1em;
-  color:#fff;
+  font-family:'Bangers',cursive;font-size:1.6rem;letter-spacing:.12em;color:#fff;
 }
-.nav-logo span{color:var(--red2);}
-.nav-links{display:flex;gap:2rem;}
+.nav-logo em{color:var(--red2);font-style:normal;}
+.nav-links{display:flex;gap:2.5rem;align-items:center;}
 .nav-links a{
-  font-family:'Share Tech Mono',monospace;
-  font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--muted);text-decoration:none;
-  transition:color .2s;
+  font-family:'Share Tech Mono',monospace;font-size:.75rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted2);text-decoration:none;transition:color .2s;
   position:relative;
 }
 .nav-links a::after{
-  content:'';position:absolute;bottom:-4px;left:0;right:0;
-  height:1px;background:var(--red2);
-  transform:scaleX(0);transform-origin:left;
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--red2);transform:scaleX(0);transform-origin:left;
   transition:transform .25s ease;
 }
 .nav-links a:hover{color:#fff;}
 .nav-links a:hover::after{transform:scaleX(1);}
+.nav-cta{
+  background:var(--red);color:#fff!important;
+  padding:.45rem 1.2rem;border-radius:5px;
+  border:1px solid var(--red2)!important;
+  transition:all .2s!important;
+}
+.nav-cta:hover{background:var(--red2)!important;box-shadow:0 0 20px rgba(255,31,61,.4);}
+.nav-cta::after{display:none!important;}
 
-/* ── Wrap ── */
-.wrap{max-width:1020px;margin:0 auto;padding:0 2rem;position:relative;z-index:2;}
+/* ── LAYOUT ── */
+.wrap{max-width:1060px;margin:0 auto;padding:0 2.5rem;position:relative;z-index:2;}
 
-/* ── Hero ── */
+/* ── HERO ── */
 header{
-  min-height:100vh;
-  display:flex;flex-direction:column;justify-content:center;
-  padding:7rem 0 4rem;
-  position:relative;
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:7rem 0 5rem;position:relative;overflow:hidden;
 }
-.hero-badge{
-  font-family:'Share Tech Mono',monospace;
-  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--red2);margin-bottom:1.2rem;
+.hero-eyebrow{
+  font-family:'Share Tech Mono',monospace;font-size:.7rem;
+  color:var(--red2);letter-spacing:.25em;text-transform:uppercase;
   display:flex;align-items:center;gap:.8rem;
-  opacity:0;animation:riseUp .7s ease .3s forwards;
+  margin-bottom:1.3rem;
+  opacity:0;animation:rise .7s ease .3s forwards;
 }
-.hero-badge::before{content:'';width:2rem;height:1px;background:var(--red2);}
+.hero-eyebrow::before{content:'';width:2.5rem;height:1px;background:var(--red2);}
 h1{
   font-family:'Bangers',cursive;
-  font-size:clamp(3.5rem,10vw,7rem);
-  line-height:.96;
-  letter-spacing:.04em;
-  color:#fff;
-  margin-bottom:.4rem;
-  opacity:0;animation:riseUp .8s ease .45s forwards;
-  text-shadow:4px 4px 0 rgba(227,0,27,.4), 8px 8px 0 rgba(0,0,0,.3);
+  font-size:clamp(4rem,11vw,8rem);
+  line-height:.92;letter-spacing:.04em;
+  color:#fff;margin-bottom:.5rem;
+  opacity:0;animation:rise .8s ease .45s forwards;
+  text-shadow:6px 6px 0 rgba(217,0,18,.35),12px 12px 0 rgba(0,0,0,.25);
 }
 h1 .name{
-  color:var(--red2);
-  -webkit-text-stroke:2px rgba(255,255,255,.15);
-  filter:drop-shadow(0 0 20px rgba(227,0,27,.5));
+  display:block;
+  background:linear-gradient(135deg,var(--red2) 0%,#ff6b35 40%,var(--red2) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:nameShimmer 3s linear infinite;
+  filter:drop-shadow(0 0 30px rgba(255,31,61,.5));
 }
+@keyframes nameShimmer{0%{background-position:0% center}100%{background-position:200% center}}
 .subtitle{
-  font-size:1.15rem;color:var(--muted);font-weight:500;
-  margin-bottom:1.5rem;letter-spacing:.03em;
-  opacity:0;animation:riseUp .8s ease .6s forwards;
+  font-family:'Oswald',sans-serif;font-weight:300;font-size:1.15rem;
+  color:var(--muted2);margin-bottom:1.6rem;letter-spacing:.06em;
+  opacity:0;animation:rise .8s ease .6s forwards;
 }
-.subtitle strong{color:var(--red2);}
+.subtitle strong{color:var(--red2);font-weight:600;}
 .hero-desc{
-  font-size:1.05rem;color:#aab4cc;
-  max-width:560px;line-height:1.8;margin-bottom:2rem;
-  opacity:0;animation:riseUp .8s ease .75s forwards;
+  font-size:1rem;color:#8a9ab8;max-width:530px;
+  line-height:1.85;margin-bottom:2rem;font-weight:300;
+  opacity:0;animation:rise .8s ease .75s forwards;
 }
-
-/* Stats */
+/* Stats bar */
 .stat-strip{
   display:flex;gap:0;margin-bottom:2.2rem;
-  opacity:0;animation:riseUp .8s ease .9s forwards;
+  opacity:0;animation:rise .8s ease .9s forwards;
+  width:fit-content;
 }
 .stat-item{
-  flex:1;padding:1rem 1.4rem;
-  border:1px solid rgba(227,0,27,.2);
-  background:rgba(10,14,30,.7);
+  padding:1rem 1.6rem;
+  background:rgba(8,10,22,.8);
+  border:1px solid var(--border-red);
   position:relative;overflow:hidden;
 }
+.stat-item:first-child{border-radius:8px 0 0 8px;}
+.stat-item:last-child{border-radius:0 8px 8px 0;}
+.stat-item+.stat-item{border-left:none;}
 .stat-item::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--red2),transparent);
+  background:linear-gradient(90deg,var(--red2),var(--blue3),var(--red2));
+  background-size:200% 100%;animation:barSlide 3s linear infinite;
 }
-.stat-item:first-child{border-radius:10px 0 0 10px;}
-.stat-item:last-child{border-radius:0 10px 10px 0;}
-.stat-item+.stat-item{border-left:none;}
+@keyframes barSlide{0%{background-position:200% center}100%{background-position:0% center}}
 .stat-num{
-  font-family:'Bangers',cursive;font-size:2rem;color:var(--red2);
-  display:block;line-height:1;letter-spacing:.05em;
+  font-family:'Bangers',cursive;font-size:2.1rem;color:var(--red2);
+  display:block;line-height:1;letter-spacing:.06em;
+  text-shadow:0 0 20px rgba(255,31,61,.4);
 }
 .stat-label{
-  font-family:'Share Tech Mono',monospace;
-  font-size:.62rem;color:var(--muted);letter-spacing:.12em;
-  text-transform:uppercase;margin-top:.3rem;display:block;
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;
+  color:var(--muted);letter-spacing:.14em;text-transform:uppercase;
+  margin-top:.3rem;display:block;
 }
-
-/* Social */
+/* Social links */
 .hero-links{
   display:flex;gap:1rem;
-  opacity:0;animation:riseUp .8s ease 1.05s forwards;
+  opacity:0;animation:rise .8s ease 1.05s forwards;
 }
 .hero-links a{
-  width:44px;height:44px;border:1px solid rgba(227,0,27,.3);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
-  color:var(--muted);text-decoration:none;font-size:1rem;
-  background:rgba(10,14,30,.6);
-  transition:all .25s ease;
+  width:46px;height:46px;
+  border:1px solid var(--border-red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted2);text-decoration:none;font-size:1rem;
+  background:rgba(8,10,22,.7);transition:all .25s;
 }
 .hero-links a:hover{
   border-color:var(--red2);color:var(--red2);
-  background:rgba(227,0,27,.1);
-  transform:translateY(-3px);
-  box-shadow:0 8px 24px rgba(227,0,27,.2);
+  background:rgba(217,0,18,.1);
+  transform:translateY(-4px);
+  box-shadow:0 10px 28px rgba(217,0,18,.2);
 }
 
-/* Scroll hint */
-.scroll-hint{
-  position:absolute;bottom:2.5rem;left:0;
-  display:flex;flex-direction:column;align-items:center;gap:.5rem;
-  font-family:'Share Tech Mono',monospace;font-size:.62rem;
-  color:var(--muted);letter-spacing:.15em;text-transform:uppercase;
-  opacity:0;animation:riseUp 1s ease 1.4s forwards;
-}
-.scroll-line{
-  width:1px;height:40px;
-  background:linear-gradient(to bottom,var(--red2),transparent);
-  animation:scrollPulse 2s ease-in-out infinite;
-}
-@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
-@keyframes riseUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Divider ── */
+/* ── DIVIDER ── */
 .divider{
   width:100%;height:1px;
-  background:linear-gradient(to right,transparent,rgba(227,0,27,.3),transparent);
-  margin:0;
+  background:linear-gradient(to right,transparent,rgba(217,0,18,.35),transparent);
 }
 
-/* ── Section header ── */
+/* ── SECTION HEADERS ── */
 .sec-label{
-  font-family:'Share Tech Mono',monospace;font-size:.7rem;
-  color:var(--red2);letter-spacing:.22em;text-transform:uppercase;
-  margin-bottom:.8rem;
-  display:flex;align-items:center;gap:.7rem;
+  font-family:'Share Tech Mono',monospace;font-size:.68rem;
+  color:var(--red2);letter-spacing:.24em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.75rem;margin-bottom:.8rem;
 }
-.sec-label::before{content:'';width:1.5rem;height:1px;background:var(--red2);}
+.sec-label::before{content:'';width:2rem;height:1px;background:var(--red2);}
 h2{
   font-family:'Bangers',cursive;
-  font-size:clamp(2rem,5vw,3rem);
-  color:#fff;margin-bottom:2.5rem;
-  letter-spacing:.06em;
-  text-shadow:3px 3px 0 rgba(227,0,27,.3);
+  font-size:clamp(2rem,5vw,3.2rem);
+  color:#fff;margin-bottom:2.8rem;
+  letter-spacing:.08em;
+  text-shadow:3px 3px 0 rgba(217,0,18,.3);
 }
-h2 i{color:var(--red2);margin-right:.5rem;}
+h2 .accent{color:var(--red2);}
 
-/* ── Skills ── */
-.skills-section{padding:5rem 0;}
+/* ── SKILLS ── */
+.skills-section{padding:5.5rem 0;}
 .skills-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
   gap:1rem;
 }
 .skill-pill{
-  background:rgba(10,14,30,.8);
-  border:1px solid rgba(227,0,27,.2);
-  border-radius:8px;padding:1rem 1.2rem;
-  text-align:center;font-size:.95rem;font-weight:600;
-  color:#aab4cc;transition:all .3s ease;
-  position:relative;overflow:hidden;cursor:default;
-  font-family:'Rajdhani',sans-serif;letter-spacing:.04em;
+  background:rgba(8,10,22,.8);border:1px solid var(--border-red);
+  border-radius:8px;padding:1rem 1.2rem;text-align:center;
+  font-size:.95rem;font-weight:500;color:var(--muted2);
+  letter-spacing:.06em;text-transform:uppercase;
+  transition:all .3s ease;position:relative;overflow:hidden;
+  cursor:default;
 }
-.skill-pill::before{
-  content:'';position:absolute;top:0;left:-100%;
-  width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(227,0,27,.12),transparent);
-  transition:left .4s ease;
+.skill-pill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(217,0,18,.08),rgba(20,50,160,.08));
+  opacity:0;transition:opacity .3s;
 }
 .skill-pill:hover{
   border-color:var(--red2);color:#fff;
-  transform:translateY(-4px);
-  box-shadow:0 8px 24px rgba(227,0,27,.2);
+  transform:translateY(-5px) scale(1.02);
+  box-shadow:0 12px 32px rgba(217,0,18,.2),0 0 0 1px rgba(217,0,18,.15);
 }
-.skill-pill:hover::before{left:100%;}
+.skill-pill:hover::after{opacity:1;}
 
-/* ── Projects ── */
-.projects-section{padding:5rem 0;}
+/* ── PROJECTS ── */
+.projects-section{padding:5.5rem 0;}
 .projects-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(440px,1fr));
-  gap:1.5rem;
+  grid-template-columns:repeat(auto-fill,minmax(460px,1fr));
+  gap:1.8rem;
 }
-@media(max-width:940px){.projects-grid{grid-template-columns:1fr;}}
+@media(max-width:980px){.projects-grid{grid-template-columns:1fr;}}
 
 .project-card{
-  background:rgba(10,14,30,.85);
-  border:1px solid rgba(227,0,27,.15);
-  border-radius:14px;padding:2rem;
+  background:rgba(8,10,22,.88);
+  border:1px solid var(--border-red);
+  border-radius:14px;padding:2.2rem;
   position:relative;overflow:hidden;
-  transition:all .35s ease;
-  backdrop-filter:blur(10px);
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+  backdrop-filter:blur(12px);
+  cursor:default;
 }
-/* web corner decoration */
-.project-card::before{
-  content:'';position:absolute;
-  top:-40px;right:-40px;
-  width:120px;height:120px;
-  border:1px solid rgba(227,0,27,.12);
-  border-radius:50%;
-  transition:all .4s ease;
-}
-.project-card::after{
-  content:'';position:absolute;
-  top:-20px;right:-20px;
-  width:60px;height:60px;
-  border:1px solid rgba(227,0,27,.15);
-  border-radius:50%;
-}
-/* top glow bar */
-.card-topbar{
-  position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--red2),var(--blue2),var(--red2));
-  background-size:200% 100%;
+/* Animated top stripe */
+.card-stripe{
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),var(--blue2),var(--red2),var(--blue3));
+  background-size:300% 100%;
   transform:scaleX(0);transform-origin:left;
-  transition:transform .45s ease;
+  transition:transform .5s ease;
+  animation:none;
 }
-.project-card:hover{
-  border-color:rgba(227,0,27,.4);
-  transform:translateY(-7px);
-  box-shadow:0 28px 60px rgba(0,0,0,.5),0 0 0 1px rgba(227,0,27,.08),
-             0 0 40px rgba(227,0,27,.08);
+.project-card:hover .card-stripe{
+  transform:scaleX(1);
+  animation:stripeFlow 2s linear infinite;
 }
-.project-card:hover::before{
-  top:-30px;right:-30px;
-  border-color:rgba(227,0,27,.25);
-}
-.project-card:hover .card-topbar{transform:scaleX(1);}
+@keyframes stripeFlow{0%{background-position:0% center}100%{background-position:300% center}}
 
+/* Web pattern corner */
+.card-web{
+  position:absolute;top:-2px;right:-2px;
+  width:90px;height:90px;opacity:.08;
+  transition:opacity .3s;
+}
+.project-card:hover .card-web{opacity:.18;}
+
+.project-card:hover{
+  transform:translateY(-8px) scale(1.005);
+  border-color:rgba(217,0,18,.45);
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.55),
+    0 0 0 1px rgba(217,0,18,.1),
+    0 0 60px rgba(217,0,18,.06);
+}
 .proj-num{
-  font-family:'Share Tech Mono',monospace;
-  font-size:.62rem;color:var(--muted);
-  letter-spacing:.15em;margin-bottom:1rem;
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;
+  color:var(--muted);letter-spacing:.18em;margin-bottom:.9rem;
+  text-transform:uppercase;
 }
 .project-card h3{
-  font-family:'Bangers',cursive;
-  font-size:1.55rem;color:#fff;
-  margin-bottom:.7rem;letter-spacing:.05em;
-  transition:color .2s;
+  font-family:'Bangers',cursive;font-size:1.7rem;color:#fff;
+  margin-bottom:.5rem;letter-spacing:.06em;
+  transition:color .25s,text-shadow .25s;
 }
-.project-card:hover h3{color:var(--red2);}
-.proj-desc-short{
-  color:#8a95b0;font-size:.95rem;line-height:1.7;
-  margin-bottom:.8rem;
+.project-card:hover h3{
+  color:var(--red2);
+  text-shadow:0 0 20px rgba(255,31,61,.4);
 }
-.proj-desc-full{
-  color:#6a7590;font-size:.88rem;line-height:1.75;
-  margin-bottom:1.2rem;
-  max-height:0;overflow:hidden;
-  transition:max-height .5s ease,opacity .4s ease;
-  opacity:0;
+.proj-tech-line{
+  font-family:'Share Tech Mono',monospace;font-size:.65rem;
+  color:var(--blue3);letter-spacing:.12em;margin-bottom:1rem;text-transform:uppercase;
 }
-.project-card:hover .proj-desc-full{
-  max-height:200px;opacity:1;
+.proj-bullets{
+  list-style:none;padding:0;margin-bottom:1.4rem;
 }
+.proj-bullets li{
+  font-size:.9rem;color:#7a8aaa;line-height:1.75;
+  padding-left:1.2rem;position:relative;margin-bottom:.3rem;
+  font-weight:300;
+}
+.proj-bullets li::before{
+  content:'▸';position:absolute;left:0;
+  color:var(--red2);font-size:.75rem;top:.05rem;
+  transition:transform .2s;
+}
+.project-card:hover .proj-bullets li::before{transform:translateX(2px);}
 .tag-row{display:flex;flex-wrap:wrap;gap:.5rem;}
 .tag{
-  background:rgba(227,0,27,.08);
-  border:1px solid rgba(227,0,27,.25);
-  color:var(--red2);
-  font-family:'Share Tech Mono',monospace;
-  font-size:.68rem;padding:.28rem .65rem;
-  border-radius:5px;letter-spacing:.05em;
+  background:rgba(217,0,18,.08);border:1px solid rgba(217,0,18,.2);
+  color:var(--red3);
+  font-family:'Share Tech Mono',monospace;font-size:.65rem;
+  padding:.28rem .7rem;border-radius:5px;letter-spacing:.06em;
   transition:all .2s;
 }
 .project-card:hover .tag{
-  background:rgba(227,0,27,.15);
-  border-color:rgba(227,0,27,.5);
+  background:rgba(217,0,18,.15);border-color:rgba(217,0,18,.45);
+  color:#fff;
 }
 
-/* ── Web swing indicator ── */
-.swing-badge{
-  position:absolute;right:1.5rem;bottom:1.5rem;
-  width:32px;height:32px;
-  opacity:.35;transition:opacity .3s;
+/* ── CERTIFICATIONS ── */
+.certs-section{padding:5rem 0;}
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
+.cert-card{
+  background:rgba(8,10,22,.8);border:1px solid var(--border-red);
+  border-radius:10px;padding:1.5rem;
+  display:flex;align-items:flex-start;gap:1rem;
+  transition:all .3s;
 }
-.project-card:hover .swing-badge{opacity:.8;}
+.cert-card:hover{
+  border-color:var(--red2);transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(217,0,18,.15);
+}
+.cert-icon{
+  width:38px;height:38px;flex-shrink:0;
+  background:rgba(217,0,18,.1);border:1px solid var(--border-red);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--red2);font-size:1rem;
+  transition:all .3s;
+}
+.cert-card:hover .cert-icon{
+  background:rgba(217,0,18,.2);border-color:var(--red2);
+  box-shadow:0 0 16px rgba(217,0,18,.25);
+}
+.cert-text h4{
+  font-family:'Oswald',sans-serif;font-size:.95rem;font-weight:500;
+  color:#fff;letter-spacing:.04em;margin-bottom:.3rem;
+}
+.cert-text p{font-size:.85rem;color:var(--muted);line-height:1.6;font-weight:300;}
 
-/* ── Footer ── */
+/* ── FOOTER ── */
 footer{
-  border-top:1px solid rgba(227,0,27,.2);
-  padding:3rem 0;text-align:center;
-  position:relative;
+  border-top:1px solid var(--border-red);padding:3.5rem 0;
+  text-align:center;position:relative;
 }
 footer::before{
   content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
-  width:180px;height:1px;
+  width:220px;height:1px;
   background:linear-gradient(90deg,transparent,var(--red2),transparent);
 }
 footer p{
-  font-family:'Share Tech Mono',monospace;
-  font-size:.78rem;color:var(--muted);
-  letter-spacing:.08em;line-height:2;
+  font-family:'Share Tech Mono',monospace;font-size:.75rem;
+  color:var(--muted);letter-spacing:.1em;line-height:2.2;
 }
 footer strong{color:var(--red2);font-weight:400;}
 
-/* ── Reveal ── */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
-.reveal-delay-1{transition-delay:.1s;}
-.reveal-delay-2{transition-delay:.2s;}
-.reveal-delay-3{transition-delay:.3s;}
-.reveal-delay-4{transition-delay:.4s;}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+.d5{transition-delay:.4s}.d6{transition-delay:.48s}
+
+/* ── WEB FLASH on click ── */
+.web-flash{
+  position:fixed;pointer-events:none;z-index:500;
+  transform:translate(-50%,-50%);
+  width:0;height:0;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,220,180,.7),rgba(255,31,61,.3),transparent 70%);
+  animation:none;
+}
+.web-flash.pop{animation:flashPop .5s ease forwards;}
+@keyframes flashPop{
+  0%{width:0;height:0;opacity:1}
+  60%{width:120px;height:120px;opacity:.6}
+  100%{width:200px;height:200px;opacity:0}
+}
 
 @media(max-width:640px){
   nav{padding:.8rem 1.2rem;}
-  .stat-strip{flex-direction:column;}
-  .stat-item{border-radius:0!important;border-left:1px solid rgba(227,0,27,.2)!important;}
-  .stat-item:first-child{border-radius:10px 10px 0 0!important;}
-  .stat-item:last-child{border-radius:0 0 10px 10px!important;border-top:none!important;}
+  .nav-links a:not(.nav-cta){display:none;}
+  h1{font-size:3.5rem;}
+  .stat-strip{width:100%;}
+  .stat-item{flex:1;}
 }
 </style>
 </head>
 <body>
 
-<canvas id="spidey-canvas"></canvas>
-<div class="web-overlay"></div>
-
-<!-- cursor -->
-<div class="cur" id="cur"></div>
-<div class="cur-dot" id="curDot"></div>
+<canvas id="bg-canvas"></canvas>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div class="web-flash" id="webFlash"></div>
 
 <nav>
-  <div class="nav-logo">EG<span>.</span></div>
+  <div class="nav-logo">EG<em>.</em></div>
   <div class="nav-links">
     <a href="#skills">Skills</a>
     <a href="#work">Projects</a>
-    <a href="mailto:eklavyagoyal108@gmail.com">Contact</a>
+    <a href="#certs">Achievements</a>
+    <a href="mailto:eklavyagoyal108@gmail.com" class="nav-cta">
+      <i class="fas fa-paper-plane" style="margin-right:.4rem;font-size:.8rem;"></i>Hire Me
+    </a>
   </div>
 </nav>
 
 <div class="wrap">
-
   <header id="home">
-    <div class="hero-badge">With great code, comes great responsibility</div>
+    <div class="hero-eyebrow">With great code, comes great responsibility</div>
     <h1>Hi, I'm<br><span class="name">Eklavya Goyal</span></h1>
     <p class="subtitle">B.Tech CSE @ Vellore Institute of Technology &nbsp;·&nbsp; <strong>9.64 CGPA</strong></p>
-    <p class="hero-desc">I'm a 4th-semester undergraduate specializing in Full-Stack Development, AI/ML, and IoT. I build scalable applications, from decentralized mesh networks for emergencies to smart city infrastructure.</p>
-
+    <p class="hero-desc">4th-semester undergraduate specializing in Full-Stack Development, AI/ML, and IoT. I build scalable applications — from decentralized mesh networks for emergencies to smart city infrastructure.</p>
     <div class="stat-strip">
       <div class="stat-item"><span class="stat-num" data-count="9.64" data-float="1">0</span><span class="stat-label">CGPA</span></div>
       <div class="stat-item"><span class="stat-num" data-count="4">0</span><span class="stat-label">Projects</span></div>
-      <div class="stat-item"><span class="stat-num" data-count="150" data-plus="1">0</span><span class="stat-label">Algorithms Solved</span></div>
-      <div class="stat-item"><span class="stat-num" data-count="2">0</span><span class="stat-label">Focus Areas</span></div>
+      <div class="stat-item"><span class="stat-num" data-count="150" data-plus="1">0</span><span class="stat-label">Algo Solved</span></div>
+      <div class="stat-item"><span class="stat-num" data-count="3">0</span><span class="stat-label">HackerRank Badges</span></div>
     </div>
-
     <div class="hero-links">
-      <a href="mailto:EklavyaGoyal108@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-      <a href="https://github.com/your-username" title="GitHub"><i class="fab fa-github"></i></a>
-      <a href="https://linkedin.com/in/your-profile" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-    </div>
-
-    <div class="scroll-hint">
-      <div class="scroll-line"></div>
-      scroll
+      <a href="mailto:eklavyagoyal108@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      <a href="https://github.com/your-username" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://linkedin.com/in/your-profile" title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://leetcode.com/your-profile" title="LeetCode" target="_blank"><i class="fas fa-code"></i></a>
     </div>
   </header>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
+<div class="wrap">
   <section class="skills-section" id="skills">
     <div class="reveal">
       <div class="sec-label">Technical Arsenal</div>
-      <h2><i class="fas fa-code"></i>What I Work With</h2>
+      <h2>What I <span class="accent">Wield</span></h2>
     </div>
     <div class="skills-grid">
-      <div class="skill-pill reveal reveal-delay-1">Java &amp; C/C++</div>
-      <div class="skill-pill reveal reveal-delay-2">Python</div>
-      <div class="skill-pill reveal reveal-delay-1">React.js</div>
-      <div class="skill-pill reveal reveal-delay-2">Node.js</div>
-      <div class="skill-pill reveal reveal-delay-3">MySQL</div>
-      <div class="skill-pill reveal reveal-delay-1">IoT (ESP32)</div>
-      <div class="skill-pill reveal reveal-delay-2">8051 Assembly</div>
-      <div class="skill-pill reveal reveal-delay-3">German (A1)</div>
+      <div class="skill-pill reveal d1">Java &amp; C/C++</div>
+      <div class="skill-pill reveal d2">Python</div>
+      <div class="skill-pill reveal d1">JavaScript</div>
+      <div class="skill-pill reveal d2">HTML / CSS</div>
+      <div class="skill-pill reveal d3">React.js</div>
+      <div class="skill-pill reveal d1">Node.js</div>
+      <div class="skill-pill reveal d2">MySQL</div>
+      <div class="skill-pill reveal d3">IoT / ESP32</div>
+      <div class="skill-pill reveal d1">Android SDK</div>
+      <div class="skill-pill reveal d2">Git / VS Code</div>
     </div>
   </section>
+</div>
 
-  <div class="divider"></div>
+<div class="divider"></div>
 
+<div class="wrap">
   <section class="projects-section" id="work">
     <div class="reveal">
       <div class="sec-label">Featured Work</div>
-      <h2><i class="fas fa-microchip"></i>Things I've Built</h2>
+      <h2>Things I've <span class="accent">Built</span></h2>
     </div>
     <div class="projects-grid">
 
-      <div class="project-card reveal reveal-delay-1">
-        <div class="card-topbar"></div>
-        <div class="proj-num">01 / PROJECT</div>
+      <!-- MeshSOS -->
+      <div class="project-card reveal d1">
+        <div class="card-stripe"></div>
+        <svg class="card-web" viewBox="0 0 90 90" fill="none">
+          <circle cx="5" cy="5" r="3" stroke="white" stroke-width=".5"/>
+          <line x1="5" y1="5" x2="85" y2="85" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="85" y2="45" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="45" y2="85" stroke="white" stroke-width=".4"/>
+          <circle cx="5" cy="5" r="20" stroke="white" stroke-width=".4" fill="none"/>
+          <circle cx="5" cy="5" r="40" stroke="white" stroke-width=".3" fill="none"/>
+          <circle cx="5" cy="5" r="65" stroke="white" stroke-width=".3" fill="none"/>
+        </svg>
+        <div class="proj-num">01 &nbsp;/&nbsp; ANDROID · BLE · FIREBASE &nbsp;·&nbsp; FEB 2026 – PRESENT</div>
         <h3>MeshSOS</h3>
-        <p class="proj-desc-short">Engineered a native Android app for decentralized P2P emergency communication in off-grid environments using Bluetooth Low Energy (BLE).</p>
-        <p class="proj-desc-full">Built entirely without internet dependency, MeshSOS creates a peer-to-peer mesh network between nearby Android devices using BLE beacons. It routes SOS signals, GPS coordinates, and text messages across multiple hops — each device acting as a relay node. Integrated Firebase for cloud sync when connectivity is eventually restored, ensuring no message is ever lost. Designed for disaster scenarios, remote expeditions, and grid-down emergencies.</p>
+        <div class="proj-tech-line">Java · Android SDK · Bluetooth Low Energy · Firebase</div>
+        <ul class="proj-bullets">
+          <li>Native Android app for decentralized P2P emergency communication in off-grid environments — zero cellular dependency.</li>
+          <li>Implemented BLE advertising &amp; scanning to create ad-hoc mesh networks with multi-hop SOS packet routing between nearby devices.</li>
+          <li>Offline-first architecture: queues GPS coordinates and distress payloads in local storage until a peer node or cloud connection is found.</li>
+          <li>High-contrast, edge-to-edge mobile UI with dynamic localization and hands-free voice-trigger — optimized for disaster scenarios.</li>
+        </ul>
         <div class="tag-row">
-          <span class="tag">Android</span><span class="tag">Firebase</span><span class="tag">BLE</span>
+          <span class="tag">Android</span><span class="tag">Java</span>
+          <span class="tag">BLE Mesh</span><span class="tag">Firebase</span><span class="tag">Offline-First</span>
         </div>
-        <svg class="swing-badge" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="5" r="3" fill="#e3001b"/>
-          <path d="M20 8 Q30 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <path d="M20 8 Q10 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <ellipse cx="20" cy="28" rx="7" ry="9" fill="#e3001b" opacity=".6"/>
-        </svg>
       </div>
 
-      <div class="project-card reveal reveal-delay-2">
-        <div class="card-topbar"></div>
-        <div class="proj-num">02 / PROJECT</div>
+      <!-- IAQ -->
+      <div class="project-card reveal d2">
+        <div class="card-stripe"></div>
+        <svg class="card-web" viewBox="0 0 90 90" fill="none">
+          <circle cx="5" cy="5" r="3" stroke="white" stroke-width=".5"/>
+          <line x1="5" y1="5" x2="85" y2="85" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="85" y2="45" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="45" y2="85" stroke="white" stroke-width=".4"/>
+          <circle cx="5" cy="5" r="20" stroke="white" stroke-width=".4" fill="none"/>
+          <circle cx="5" cy="5" r="40" stroke="white" stroke-width=".3" fill="none"/>
+          <circle cx="5" cy="5" r="65" stroke="white" stroke-width=".3" fill="none"/>
+        </svg>
+        <div class="proj-num">02 &nbsp;/&nbsp; FULL-STACK IOT &nbsp;·&nbsp; MAR 2026</div>
         <h3>Smart City IAQ Monitor</h3>
-        <p class="proj-desc-short">Developed a full-stack IoT platform to centralize indoor air quality monitoring, featuring real-time data sync with microcontrollers.</p>
-        <p class="proj-desc-full">A comprehensive IoT ecosystem spanning hardware to cloud. ESP32 microcontrollers sample CO2, particulate matter (PM2.5), humidity, and temperature at 5-second intervals. Data streams over WebSockets to a Node.js backend, where it's stored and served to a React dashboard featuring live graphs, threshold alerts, and historical trend analysis. Designed to scale across multiple rooms or floors of a smart building with a unified management console.</p>
+        <div class="proj-tech-line">React.js · Node.js · C++ · ESP32 · MQ-135</div>
+        <ul class="proj-bullets">
+          <li>Full-stack IoT platform replacing isolated local displays with a scalable React.js dashboard and Node.js backend for centralized IAQ monitoring.</li>
+          <li>Programmed ESP32 in C++ to sample MQ-135 sensor data and autonomously trigger a 5V relay actuator for automated ventilation control.</li>
+          <li>Integrated Open-Meteo API to fuse real-time ambient weather data with hardware sensor readings for dynamic UI visualization.</li>
+          <li>Low-latency IoT architecture using JSON payloads and HTTP POST/GET for continuous synchronized data transmission between hardware and portal.</li>
+        </ul>
         <div class="tag-row">
-          <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">C++ / ESP32</span>
+          <span class="tag">React.js</span><span class="tag">Node.js</span>
+          <span class="tag">C++ / ESP32</span><span class="tag">IoT</span><span class="tag">REST API</span>
         </div>
-        <svg class="swing-badge" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="5" r="3" fill="#e3001b"/>
-          <path d="M20 8 Q30 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <path d="M20 8 Q10 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <ellipse cx="20" cy="28" rx="7" ry="9" fill="#e3001b" opacity=".6"/>
-        </svg>
       </div>
 
-      <div class="project-card reveal reveal-delay-1">
-        <div class="card-topbar"></div>
-        <div class="proj-num">03 / PROJECT</div>
-        <h3>Travel &amp; Tourism SPA</h3>
-        <p class="proj-desc-short">Developed a responsive Single Page Application with dynamic routing and interactive UI components for a seamless user experience.</p>
-        <p class="proj-desc-full">A feature-rich travel discovery platform built as a React SPA. Implements client-side routing for instant page transitions between destination pages, itinerary builders, and booking flows. Features lazy-loaded image galleries, animated filter carousels, and a custom CSS3 parallax hero. Built with component-driven architecture, ensuring reusability and clean separation of concerns across 15+ distinct views.</p>
+      <!-- Travel SPA -->
+      <div class="project-card reveal d1">
+        <div class="card-stripe"></div>
+        <svg class="card-web" viewBox="0 0 90 90" fill="none">
+          <circle cx="5" cy="5" r="3" stroke="white" stroke-width=".5"/>
+          <line x1="5" y1="5" x2="85" y2="85" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="85" y2="45" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="45" y2="85" stroke="white" stroke-width=".4"/>
+          <circle cx="5" cy="5" r="20" stroke="white" stroke-width=".4" fill="none"/>
+          <circle cx="5" cy="5" r="40" stroke="white" stroke-width=".3" fill="none"/>
+          <circle cx="5" cy="5" r="65" stroke="white" stroke-width=".3" fill="none"/>
+        </svg>
+        <div class="proj-num">03 &nbsp;/&nbsp; FRONTEND SPA &nbsp;·&nbsp; JAN 2025</div>
+        <h3>Travel &amp; Tourism Portal</h3>
+        <div class="proj-tech-line">React.js · CSS3 · JavaScript</div>
+        <ul class="proj-bullets">
+          <li>Responsive SPA with modular React component architecture — built for code reusability and horizontal scalability across 15+ distinct views.</li>
+          <li>Mobile-first UI using CSS Flexbox and Grid, ensuring seamless cross-browser compatibility and optimized layout rendering.</li>
+          <li>Client-side validation and real-time state management for email/phone inputs — reducing server-side processing load.</li>
+          <li>Optimized DOM manipulation and asset loading strategies for high performance scores and smooth user experience.</li>
+        </ul>
         <div class="tag-row">
           <span class="tag">React.js</span><span class="tag">CSS3</span>
+          <span class="tag">JavaScript</span><span class="tag">SPA</span>
         </div>
-        <svg class="swing-badge" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="5" r="3" fill="#e3001b"/>
-          <path d="M20 8 Q30 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <path d="M20 8 Q10 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <ellipse cx="20" cy="28" rx="7" ry="9" fill="#e3001b" opacity=".6"/>
-        </svg>
       </div>
 
-      <div class="project-card reveal reveal-delay-2">
-        <div class="card-topbar"></div>
-        <div class="proj-num">04 / PROJECT</div>
+      <!-- Library -->
+      <div class="project-card reveal d2">
+        <div class="card-stripe"></div>
+        <svg class="card-web" viewBox="0 0 90 90" fill="none">
+          <circle cx="5" cy="5" r="3" stroke="white" stroke-width=".5"/>
+          <line x1="5" y1="5" x2="85" y2="85" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="85" y2="45" stroke="white" stroke-width=".4"/>
+          <line x1="5" y1="5" x2="45" y2="85" stroke="white" stroke-width=".4"/>
+          <circle cx="5" cy="5" r="20" stroke="white" stroke-width=".4" fill="none"/>
+          <circle cx="5" cy="5" r="40" stroke="white" stroke-width=".3" fill="none"/>
+          <circle cx="5" cy="5" r="65" stroke="white" stroke-width=".3" fill="none"/>
+        </svg>
+        <div class="proj-num">04 &nbsp;/&nbsp; BACKEND SYSTEM &nbsp;·&nbsp; JAN 2024</div>
         <h3>Automated Library System</h3>
-        <p class="proj-desc-short">Engineered a robust backend system to automate library operations, manage book tracking, and calculate late fees automatically.</p>
-        <p class="proj-desc-full">A full-featured library management backend using Python and MySQL. Handles cataloguing, member registration, issue/return workflows, and automated late-fee calculation via scheduled cron jobs. Features complex SQL joins for cross-referencing members, books, and due dates. Includes a CLI interface for librarians and a report generator that exports borrowing statistics and overdue lists — reducing manual admin effort by design.</p>
+        <div class="proj-tech-line">Python · MySQL</div>
+        <ul class="proj-bullets">
+          <li>Robust backend system with normalized relational MySQL schema for persistent data storage — book inventory and student records management.</li>
+          <li>Efficient SQL queries with complex CRUD operations enabling administrators to track inventory with minimal latency.</li>
+          <li>Python automation for late-fee calculation based on date differentials — eliminates manual processes and calculation errors entirely.</li>
+          <li>Defensive programming for edge-case handling and input validation — preventing system crashes and ensuring consistent uptime.</li>
+        </ul>
         <div class="tag-row">
           <span class="tag">Python</span><span class="tag">MySQL</span>
+          <span class="tag">CRUD</span><span class="tag">Automation</span>
         </div>
-        <svg class="swing-badge" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="5" r="3" fill="#e3001b"/>
-          <path d="M20 8 Q30 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <path d="M20 8 Q10 20 20 35" stroke="#aaa" stroke-width="1" fill="none"/>
-          <ellipse cx="20" cy="28" rx="7" ry="9" fill="#e3001b" opacity=".6"/>
-        </svg>
       </div>
 
     </div>
   </section>
+</div>
 
+<div class="divider"></div>
+
+<div class="wrap">
+  <section class="certs-section" id="certs">
+    <div class="reveal">
+      <div class="sec-label">Certifications &amp; Achievements</div>
+      <h2>Powered <span class="accent">Up</span></h2>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card reveal d1">
+        <div class="cert-icon"><i class="fas fa-code"></i></div>
+        <div class="cert-text">
+          <h4>150+ LeetCode Problems</h4>
+          <p>Solved 150+ algorithmic challenges. Strong foundation in Data Structures &amp; Algorithms.</p>
+        </div>
+      </div>
+      <div class="cert-card reveal d2">
+        <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+        <div class="cert-text">
+          <h4>3× HackerRank Badges</h4>
+          <p>Earned badges in Java, Python, and MySQL — validating syntax and database management proficiency.</p>
+        </div>
+      </div>
+      <div class="cert-card reveal d3">
+        <div class="cert-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="cert-text">
+          <h4>9.64 CGPA at VIT</h4>
+          <p>Maintained academic excellence through 3 semesters while building real-world projects.</p>
+        </div>
+      </div>
+      <div class="cert-card reveal d1">
+        <div class="cert-icon"><i class="fas fa-school"></i></div>
+        <div class="cert-text">
+          <h4>Class XII — 95.8% (CBSE)</h4>
+          <p>Consistent academic performance across board examinations.</p>
+        </div>
+      </div>
+      <div class="cert-card reveal d2">
+        <div class="cert-icon"><i class="fab fa-react"></i></div>
+        <div class="cert-text">
+          <h4>Self-Taught React &amp; Node</h4>
+          <p>Proactively upskilled in Modern Web Development beyond university curriculum.</p>
+        </div>
+      </div>
+      <div class="cert-card reveal d3">
+        <div class="cert-icon"><i class="fas fa-microchip"></i></div>
+        <div class="cert-text">
+          <h4>IoT Systems Builder</h4>
+          <p>Hands-on experience with ESP32, C++, sensor integration and hardware-to-cloud architecture.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <footer>
   <div class="wrap">
-    <p>Built by <strong>Eklavya Goyal</strong> &copy; 2026</p>
-    <p>Algorithms: <strong>150+ Solved</strong> &nbsp;·&nbsp; Focus: <strong>AI &amp; Smart Cities</strong></p>
+    <p>Built with passion by <strong>Eklavya Goyal</strong> &copy; 2026</p>
+    <p><strong>eklavyagoyal108@gmail.com</strong> &nbsp;·&nbsp; VIT Vellore &nbsp;·&nbsp; +91 9328445567</p>
   </div>
 </footer>
 
 <script>
-/* ════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    CURSOR
-════════════════════════════════════════════════════ */
-const cur = document.getElementById('cur');
-const curDot = document.getElementById('curDot');
-let mx=window.innerWidth/2, my=window.innerHeight/2;
+══════════════════════════════════════════════════ */
+const cur=document.getElementById('cur');
+const ring=document.getElementById('cur-ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=innerWidth/2,ry=innerHeight/2;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function tickCursor(){
-  cur.style.left=mx+'px'; cur.style.top=my+'px';
-  curDot.style.left=mx+'px'; curDot.style.top=my+'px';
-  requestAnimationFrame(tickCursor);
+(function tc(){
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(tc);
 })();
 
-/* ════════════════════════════════════════════════════
-   CANVAS — Spider-Man + web system
-════════════════════════════════════════════════════ */
-const canvas = document.getElementById('spidey-canvas');
-const ctx = canvas.getContext('2d');
+/* ══════════════════════════════════════════════════
+   WEB FLASH ON CLICK
+══════════════════════════════════════════════════ */
+const flash=document.getElementById('webFlash');
+document.addEventListener('click',e=>{
+  flash.style.left=e.clientX+'px';flash.style.top=e.clientY+'px';
+  flash.classList.remove('pop');
+  void flash.offsetWidth;
+  flash.classList.add('pop');
+});
 
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-resize();
-window.addEventListener('resize',resize);
+/* ══════════════════════════════════════════════════
+   CANVAS — AMAZING SPIDER-MAN
+══════════════════════════════════════════════════ */
+const C=document.getElementById('bg-canvas');
+const ctx=C.getContext('2d');
+function resize(){C.width=innerWidth;C.height=innerHeight;}
+resize();addEventListener('resize',resize);
 
-// ── Web nodes (random anchor points) ──
-const WEB_COUNT = 22;
-let webNodes = [];
-function buildWebNodes(){
-  webNodes=[];
-  for(let i=0;i<WEB_COUNT;i++){
-    webNodes.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      vx:(Math.random()-.5)*.3,
-      vy:(Math.random()-.5)*.3,
-    });
-  }
+// ── Web node system ──
+const N=28;
+let nodes=[];
+function mkNodes(){
+  nodes=[];
+  for(let i=0;i<N;i++) nodes.push({
+    x:Math.random()*C.width,y:Math.random()*C.height,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    pulse:Math.random()*Math.PI*2
+  });
 }
-buildWebNodes();
-window.addEventListener('resize',buildWebNodes);
+mkNodes();addEventListener('resize',mkNodes);
 
-// ── Spider-Man figure ──
-const spidey = {
-  x: canvas.width*.75,
-  y: canvas.height*.25,
-  tx: canvas.width*.75,
-  ty: canvas.height*.25,
-  scale: 1,
-  swingAngle: 0,
-  swingDir: 1,
-  phase: 'idle', // idle | swinging
-  webAnchorX: 0,
-  webAnchorY: 0,
+// ── Spidey state ──
+const sp={
+  x:C.width*.72,y:C.height*.28,
+  tx:C.width*.72,ty:C.height*.28,
+  webAnchor:{x:C.width*.72,y:0},
 };
 
-// Track mouse
-let mousePosX = canvas.width/2;
-let mousePosY = canvas.height/2;
-document.addEventListener('mousemove',e=>{
-  mousePosX=e.clientX;
-  mousePosY=e.clientY;
-});
+// ── Mouse ──
+let MX=C.width/2,MY=C.height/2;
+document.addEventListener('mousemove',e=>{MX=e.clientX;MY=e.clientY;});
 
-// Track scroll
-let scrollY = 0;
-window.addEventListener('scroll',()=>{ scrollY=window.scrollY; });
+// ── Draw helpers ──
+function arc(x,y,r,fill,stroke,lw){
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();}
+}
+function webLine(x1,y1,x2,y2,a,w){
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  const sag=(Math.sqrt((x2-x1)**2+(y2-y1)**2))*.08;
+  ctx.quadraticCurveTo((x1+x2)/2,(y1+y2)/2+sag,x2,y2);
+  ctx.strokeStyle=`rgba(230,225,190,${a})`;
+  ctx.lineWidth=w||.7;ctx.stroke();
+}
 
-// ── Draw spider-man (SVG-style canvas art) ──
-function drawSpidey(x,y,scale,angle){
+// ── AMAZING SPIDER-MAN FIGURE ──
+function drawAmazingSpidey(x,y,sc,bodyTilt,t){
   ctx.save();
-  ctx.translate(x,y);
-  ctx.rotate(angle);
-  ctx.scale(scale,scale);
+  ctx.translate(x,y);ctx.rotate(bodyTilt);ctx.scale(sc,sc);
 
-  const s = 1;
+  const breath = Math.sin(t*1.1)*.012;
+  ctx.scale(1+breath,1-breath*.5);
 
-  // Body shadow glow
-  ctx.shadowColor='rgba(227,0,27,.4)';
-  ctx.shadowBlur=28;
+  // ── GLOW ──
+  ctx.shadowColor='rgba(217,0,18,.55)';ctx.shadowBlur=40;
 
-  // Torso
+  // ── LEGS (behind body) ──
+  const legWave = Math.sin(t*.9)*.12;
+  // Left legs
+  drawLimb(ctx,-11,2,-28+legWave*50,22,6,  '#0a1a6a','#0e2288');
+  drawLimb(ctx,-10,8,-24+legWave*40,30,5.5,'#0a1a6a','#0e2288');
+  // Right legs
+  drawLimb(ctx,11,2,28-legWave*50,22,6,   '#0a1a6a','#0e2288');
+  drawLimb(ctx,10,8,24-legWave*40,30,5.5, '#0a1a6a','#0e2288');
+
+  ctx.shadowBlur=25;
+
+  // ── TORSO ──
+  // Blue lower half
   ctx.beginPath();
-  ctx.ellipse(0,0,13*s,18*s,0,0,Math.PI*2);
-  ctx.fillStyle='#cc0018';
-  ctx.fill();
-
-  // Blue chest / legs area
+  ctx.ellipse(0,6,12,15,0,0,Math.PI*2);
+  const bodyGrad=ctx.createLinearGradient(-12,-5,12,20);
+  bodyGrad.addColorStop(0,'#1432a0');bodyGrad.addColorStop(1,'#08145a');
+  ctx.fillStyle=bodyGrad;ctx.fill();
+  // Red upper torso
   ctx.beginPath();
-  ctx.ellipse(0,8*s,10*s,12*s,0,0,Math.PI*2);
-  ctx.fillStyle='#0e2b8e';
-  ctx.fill();
+  ctx.ellipse(0,-4,12,14,0,0,Math.PI*2);
+  const torsoGrad=ctx.createRadialGradient(-3,-8,2,0,-4,14);
+  torsoGrad.addColorStop(0,'#ff2840');torsoGrad.addColorStop(1,'#b5000f');
+  ctx.fillStyle=torsoGrad;ctx.fill();
 
-  // Head
-  ctx.shadowBlur=20;
-  ctx.beginPath();
-  ctx.ellipse(0,-22*s,11*s,13*s,0,0,Math.PI*2);
-  ctx.fillStyle='#cc0018';
-  ctx.fill();
-
-  // Eye whites (left, right)
-  ctx.shadowBlur=0;
-  ctx.fillStyle='rgba(255,255,255,0.9)';
-  // left eye
-  ctx.beginPath();
-  ctx.ellipse(-4.5*s,-22.5*s,4*s,3*s,-0.3,0,Math.PI*2);
-  ctx.fill();
-  // right eye
-  ctx.beginPath();
-  ctx.ellipse(4.5*s,-22.5*s,4*s,3*s,0.3,0,Math.PI*2);
-  ctx.fill();
-
-  // Eye outline
-  ctx.strokeStyle='#111';ctx.lineWidth=.7;
-  ctx.beginPath();ctx.ellipse(-4.5*s,-22.5*s,4*s,3*s,-0.3,0,Math.PI*2);ctx.stroke();
-  ctx.beginPath();ctx.ellipse(4.5*s,-22.5*s,4*s,3*s,0.3,0,Math.PI*2);ctx.stroke();
-
-  // Web lines on face
-  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=.6;
-  ctx.beginPath();ctx.moveTo(0,-34*s);ctx.lineTo(0,-10*s);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-11*s,-22*s);ctx.lineTo(11*s,-22*s);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-9*s,-28*s);ctx.lineTo(9*s,-16*s);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(9*s,-28*s);ctx.lineTo(-9*s,-16*s);ctx.stroke();
-
-  // Web lines on torso
-  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(0,-18*s);ctx.lineTo(0,18*s);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-13*s,0);ctx.lineTo(13*s,0);ctx.stroke();
-  for(let i=1;i<=3;i++){
-    ctx.beginPath();
-    ctx.ellipse(0,0,13*s*i/3,18*s*i/3,0,0,Math.PI*2);
+  // ── WEB PATTERN ON TORSO (radial lines) ──
+  ctx.save();ctx.shadowBlur=0;
+  ctx.strokeStyle='rgba(0,0,0,.22)';ctx.lineWidth=.55;
+  // radial lines from center
+  for(let ang=0;ang<Math.PI*2;ang+=Math.PI/6){
+    ctx.beginPath();ctx.moveTo(0,-4);
+    ctx.lineTo(Math.cos(ang)*13,Math.sin(ang)*13-4);
     ctx.stroke();
   }
-
-  // Left arm (raised / shooting web)
-  ctx.save();
-  ctx.translate(-13*s,-5*s);
-  ctx.rotate(-0.8 + Math.sin(Date.now()/700)*.15);
-  ctx.beginPath();
-  ctx.moveTo(0,0);ctx.lineTo(-22*s,-14*s);
-  ctx.strokeStyle='#cc0018';ctx.lineWidth=6*s;ctx.lineCap='round';ctx.stroke();
-  // forearm
-  ctx.translate(-22*s,-14*s);
-  ctx.rotate(-0.4);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-16*s,-8*s);
-  ctx.strokeStyle='#cc0018';ctx.lineWidth=5*s;ctx.stroke();
-  // hand / web shooter
-  ctx.translate(-16*s,-8*s);
-  ctx.beginPath();ctx.ellipse(0,0,5*s,4*s,-0.3,0,Math.PI*2);
-  ctx.fillStyle='#cc0018';ctx.fill();
-  // web shooter wrist band
-  ctx.beginPath();ctx.ellipse(0,0,4*s,2.5*s,0,0,Math.PI*2);
-  ctx.fillStyle='#d4af37';ctx.fill();
-  ctx.restore();
-
-  // Right arm
-  ctx.save();
-  ctx.translate(13*s,-5*s);
-  ctx.rotate(0.5 + Math.sin(Date.now()/800+1)*.1);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(18*s,10*s);
-  ctx.strokeStyle='#0e2b8e';ctx.lineWidth=6*s;ctx.lineCap='round';ctx.stroke();
-  ctx.translate(18*s,10*s);ctx.rotate(0.3);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(14*s,7*s);
-  ctx.strokeStyle='#0e2b8e';ctx.lineWidth=5*s;ctx.stroke();
-  ctx.translate(14*s,7*s);
-  ctx.beginPath();ctx.ellipse(0,0,5*s,4*s,0.3,0,Math.PI*2);
-  ctx.fillStyle='#0e2b8e';ctx.fill();
-  ctx.restore();
-
-  // Legs
-  // left leg
-  ctx.save();
-  ctx.translate(-7*s,16*s);
-  ctx.rotate(0.2 + Math.sin(Date.now()/600)*.08);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-8*s,20*s);
-  ctx.strokeStyle='#0e2b8e';ctx.lineWidth=7*s;ctx.lineCap='round';ctx.stroke();
-  ctx.translate(-8*s,20*s);ctx.rotate(0.15);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-4*s,18*s);
-  ctx.strokeStyle='#0e2b8e';ctx.lineWidth=6*s;ctx.stroke();
-  ctx.restore();
-
-  // right leg
-  ctx.save();
-  ctx.translate(7*s,16*s);
-  ctx.rotate(-0.2 + Math.sin(Date.now()/600+.5)*.08);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(8*s,20*s);
-  ctx.strokeStyle='#0e2b8e';ctx.lineWidth=7*s;ctx.lineCap='round';ctx.stroke();
-  ctx.translate(8*s,20*s);ctx.rotate(-0.15);
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(4*s,18*s);
-  ctx.strokeStyle='#0e2b8e';ctx.lineWidth=6*s;ctx.stroke();
-  ctx.restore();
-
-  // Spider logo on chest
-  ctx.save();
-  ctx.shadowBlur=0;
-  ctx.fillStyle='#111';
-  ctx.beginPath();
-  // simple spider shape
-  ctx.translate(0,-2*s);
-  ctx.ellipse(0,0,4*s,2.5*s,0,0,Math.PI*2);ctx.fill();
-  ctx.fillRect(-1.5*s,-6*s,3*s,12*s);
-  // legs
-  for(let leg=0;leg<3;leg++){
-    let lx=(leg+1)*3*s;
-    let ly=(leg*.5)*s;
-    ctx.fillRect(0,ly-.5*s,lx,.8*s);
-    ctx.fillRect(-lx,ly-.5*s,lx,.8*s);
+  // concentric ellipses
+  for(let r=1;r<=4;r++){
+    ctx.beginPath();ctx.ellipse(0,-4,r*3.2,r*3.2,0,0,Math.PI*2);
+    ctx.stroke();
   }
   ctx.restore();
 
+  // ── WAISTBAND ──
+  ctx.beginPath();
+  ctx.ellipse(0,8.5,12,2.5,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,.35)';ctx.fill();
+
+  // ── SPIDER LOGO ON CHEST ──
+  ctx.save();ctx.shadowBlur=0;
+  ctx.translate(0,-7);ctx.fillStyle='#0a0a12';
+  // body
+  ctx.beginPath();ctx.ellipse(0,0,3.5,2.2,0,0,Math.PI*2);ctx.fill();
+  ctx.fillRect(-1.2,-6,2.4,12);
+  // legs
+  const spAngles=[-0.7,-0.3,0.3,0.7];
+  spAngles.forEach(a=>{
+    const lx=Math.cos(a)*7,ly=Math.sin(a)*4+1;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(lx,ly);
+    ctx.strokeStyle='#0a0a12';ctx.lineWidth=1.8;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-lx,ly);
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  // ── ARMS ──
+  const swingL=Math.sin(t*.7)*0.15;
+  const swingR=Math.sin(t*.8+.5)*0.1;
+  // Left arm — raised, shooting web toward mouse
+  const armLAngle=-1.1+swingL;
+  drawArm(ctx,-12,-2,armLAngle,22,8,'#c8000f','#ff1f3d',true,t);
+  // Right arm — relaxed
+  drawArm(ctx,12,-2,1.0+swingR,20,8,'#0e1e88','#1432a0',false,t);
+
+  // ── HEAD ──
+  ctx.shadowBlur=30;ctx.shadowColor='rgba(217,0,18,.5)';
+  // Base head
+  ctx.beginPath();
+  ctx.ellipse(0,-22,11,13.5,0,0,Math.PI*2);
+  const headGrad=ctx.createRadialGradient(-2,-26,2,0,-22,13);
+  headGrad.addColorStop(0,'#ff2840');headGrad.addColorStop(1,'#aa0010');
+  ctx.fillStyle=headGrad;ctx.fill();
+
+  // ── WEB LINES ON HEAD ──
+  ctx.save();ctx.shadowBlur=0;
+  ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=.6;
+  // vertical
+  ctx.beginPath();ctx.moveTo(0,-35.5);ctx.lineTo(0,-9);ctx.stroke();
+  // horizontal rows
+  [-32,-28,-24,-20,-16,-12].forEach(yy=>{
+    const hw=Math.sqrt(Math.max(0,1-((yy+22)/14)**2))*11;
+    ctx.beginPath();ctx.moveTo(-hw,yy);ctx.lineTo(hw,yy);ctx.stroke();
+  });
+  // diagonal web lines
+  for(let a=-2;a<=2;a++){
+    ctx.beginPath();ctx.moveTo(a*4,-35.5);ctx.lineTo(a*6.5,-9);ctx.stroke();
+  }
+  ctx.restore();
+
+  // ── AMAZING SPIDER-MAN EYES — large, angled white lenses ──
+  ctx.save();ctx.shadowBlur=0;
+
+  // Left eye
+  ctx.save();ctx.translate(-4.5,-22.5);ctx.rotate(-0.35);
+  const eyeGradL=ctx.createRadialGradient(0,0,1,0,0,5.5);
+  eyeGradL.addColorStop(0,'rgba(255,255,255,1)');
+  eyeGradL.addColorStop(.7,'rgba(200,230,255,.9)');
+  eyeGradL.addColorStop(1,'rgba(150,200,255,.7)');
+  ctx.beginPath();
+  ctx.moveTo(-5.5,-1.5);
+  ctx.bezierCurveTo(-5,-4.5,5,-4.5,5.5,-1.5);
+  ctx.bezierCurveTo(5,2,-5,2,-5.5,-1.5);
+  ctx.fillStyle=eyeGradL;ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=.5;ctx.stroke();
+  // Eye shine
+  ctx.beginPath();ctx.ellipse(-1.5,-1.5,1.5,.8,-.5,0,Math.PI*2);
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.fill();
+  ctx.restore();
+
+  // Right eye
+  ctx.save();ctx.translate(4.5,-22.5);ctx.rotate(0.35);
+  const eyeGradR=ctx.createRadialGradient(0,0,1,0,0,5.5);
+  eyeGradR.addColorStop(0,'rgba(255,255,255,1)');
+  eyeGradR.addColorStop(.7,'rgba(200,230,255,.9)');
+  eyeGradR.addColorStop(1,'rgba(150,200,255,.7)');
+  ctx.beginPath();
+  ctx.moveTo(-5.5,-1.5);
+  ctx.bezierCurveTo(-5,-4.5,5,-4.5,5.5,-1.5);
+  ctx.bezierCurveTo(5,2,-5,2,-5.5,-1.5);
+  ctx.fillStyle=eyeGradR;ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=.5;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(1.5,-1.5,1.5,.8,.5,0,Math.PI*2);
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.fill();
+  ctx.restore();
+
+  ctx.restore(); // eyes save
+
+  ctx.restore(); // main
+}
+
+function drawLimb(ctx,x,y,angleDeg,length,width,fill1,fill2){
+  ctx.save();ctx.translate(x,y);ctx.rotate(angleDeg*Math.PI/180);
+  const g=ctx.createLinearGradient(0,0,length,0);
+  g.addColorStop(0,fill1);g.addColorStop(1,fill2);
+  ctx.strokeStyle=g;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(length,0);ctx.stroke();
+  // shin / lower
+  ctx.translate(length,0);ctx.rotate(20*Math.PI/180);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(length*.8,0);
+  ctx.lineWidth=width*.8;ctx.stroke();
   ctx.restore();
 }
 
-// ── Draw web line ──
-function drawWebLine(x1,y1,x2,y2,alpha,width){
-  ctx.beginPath();
-  ctx.moveTo(x1,y1);
-  // slight curve
-  const mx=(x1+x2)/2 + (Math.random()-.5)*20;
-  const my=(y1+y2)/2 + (Math.random()-.5)*20;
-  ctx.quadraticCurveTo(mx,my,x2,y2);
-  ctx.strokeStyle=`rgba(220,220,180,${alpha})`;
-  ctx.lineWidth=width||.8;
-  ctx.stroke();
+function drawArm(ctx,x,y,angle,length,width,c1,c2,webShooter,t){
+  ctx.save();ctx.translate(x,y);ctx.rotate(angle);
+  const g=ctx.createLinearGradient(0,0,length,0);
+  g.addColorStop(0,c1);g.addColorStop(1,c2);
+  ctx.strokeStyle=g;ctx.lineWidth=width;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(length,0);ctx.stroke();
+  // forearm
+  ctx.translate(length,0);ctx.rotate(webShooter?-0.5:0.4);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(length*.8,0);
+  ctx.lineWidth=width*.8;ctx.stroke();
+  // fist/hand
+  ctx.translate(length*.8,0);
+  arc(0,0,width*.55,c1,null,0);
+  if(webShooter){
+    // gold web-shooter band
+    ctx.beginPath();ctx.arc(0,0,width*.7,0,Math.PI*2);
+    ctx.strokeStyle='#c8a84b';ctx.lineWidth=1.8;ctx.stroke();
+    // pulsing glow on web shooter
+    const glowA=.4+Math.sin(t*3)*.3;
+    ctx.beginPath();ctx.arc(0,0,width*.7+2,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(200,168,75,${glowA})`;ctx.lineWidth=1;ctx.stroke();
+  }
+  ctx.restore();
 }
 
-// ── Web shooter ray from hand ──
-let webRayAlpha = 0;
-let webRayTarget = {x:0,y:0};
-
-document.addEventListener('click',e=>{
-  webRayTarget={x:e.clientX,y:e.clientY};
-  webRayAlpha=1;
-});
-
-// ── Main render ──
-let lastTime=0;
-function render(ts){
-  const dt = ts-lastTime; lastTime=ts;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  const scroll = scrollY;
-  const t = ts/1000;
-
-  // Update web nodes (drift)
-  webNodes.forEach(n=>{
-    n.x+=n.vx; n.y+=n.vy;
-    if(n.x<0||n.x>canvas.width) n.vx*=-1;
-    if(n.y<0||n.y>canvas.height) n.vy*=-1;
-    // gentle mouse repulsion
-    const dx=n.x-mousePosX, dy=n.y-mousePosY;
-    const dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<120){
-      n.x+=dx/dist*.6;
-      n.y+=dy/dist*.6;
-    }
+// ── Background web particles ──
+function drawWebNetwork(t){
+  nodes.forEach(n=>{
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0||n.x>C.width) n.vx*=-1;
+    if(n.y<0||n.y>C.height) n.vy*=-1;
+    // mouse repulsion
+    const dx=n.x-MX,dy=n.y-MY;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){n.x+=dx/d*.7;n.y+=dy/d*.7;}
+    n.pulse+=.02;
   });
-
-  // Draw background web network
-  ctx.save();
-  for(let i=0;i<webNodes.length;i++){
-    for(let j=i+1;j<webNodes.length;j++){
-      const dx=webNodes[i].x-webNodes[j].x;
-      const dy=webNodes[i].y-webNodes[j].y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<200){
-        const alpha=(1-dist/200)*0.12;
-        drawWebLine(webNodes[i].x,webNodes[i].y,webNodes[j].x,webNodes[j].y,alpha,.7);
+  // connections
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<210){
+        const a=(1-d/210)*.1;
+        webLine(nodes[i].x,nodes[i].y,nodes[j].x,nodes[j].y,a,.6);
       }
     }
   }
-  ctx.restore();
+  // node dots
+  nodes.forEach(n=>{
+    const a=.15+Math.sin(n.pulse)*.07;
+    arc(n.x,n.y,1.5,`rgba(220,215,185,${a})`,null,0);
+  });
+}
 
-  // Draw web to mouse (always)
-  ctx.save();
-  const handX = spidey.x - 38;
-  const handY = spidey.y - 20;
-  const dxm = mousePosX-handX, dym = mousePosY-handY;
-  const distM = Math.sqrt(dxm*dxm+dym*dym);
-  if(distM>60){
-    const steps=6;
-    for(let seg=0;seg<steps;seg++){
-      const t0=seg/steps, t1=(seg+1)/steps;
-      const sag=distM*.12;
-      const mx0=handX+dxm*t0, my0=handY+dym*t0+Math.sin(t0*Math.PI)*sag;
-      const mx1=handX+dxm*t1, my1=handY+dym*t1+Math.sin(t1*Math.PI)*sag;
-      const a=(1-seg/steps)*.55;
-      ctx.beginPath();ctx.moveTo(mx0,my0);ctx.lineTo(mx1,my1);
-      ctx.strokeStyle=`rgba(240,235,200,${a})`;
-      ctx.lineWidth=1.2; ctx.stroke();
+// ── Web rope (sagging, multi-strand) ──
+function drawWebRope(x1,y1,x2,y2,alpha){
+  const dx=x2-x1,dy=y2-y1,dist=Math.sqrt(dx*dx+dy*dy);
+  const sag=dist*.18;
+  const cpx=(x1+x2)/2,cpy=(y1+y2)/2+sag;
+  // main strand
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  ctx.quadraticCurveTo(cpx,cpy,x2,y2);
+  ctx.strokeStyle=`rgba(230,225,190,${alpha*.7})`;ctx.lineWidth=1.8;ctx.stroke();
+  // secondary thin strand offset
+  ctx.beginPath();ctx.moveTo(x1+1.5,y1);
+  ctx.quadraticCurveTo(cpx+2,cpy,x2+1.5,y2);
+  ctx.strokeStyle=`rgba(230,225,190,${alpha*.25})`;ctx.lineWidth=.7;ctx.stroke();
+}
+
+// ── Mouse web thread (from hand to cursor) ──
+function drawMouseWeb(hx,hy,t){
+  const dx=MX-hx,dy=MY-hy;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist<80) return;
+  const steps=8;
+  for(let i=0;i<steps;i++){
+    const p0=i/steps,p1=(i+1)/steps;
+    const sag=dist*.1;
+    const x0=hx+dx*p0;const y0=hy+dy*p0+Math.sin(p0*Math.PI)*sag;
+    const x1=hx+dx*p1;const y1=hy+dy*p1+Math.sin(p1*Math.PI)*sag;
+    const a=(1-i/steps)*.65;
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);
+    ctx.strokeStyle=`rgba(240,235,200,${a})`;ctx.lineWidth=1.4;ctx.stroke();
+  }
+  // Glow at cursor end
+  const g=ctx.createRadialGradient(MX,MY,0,MX,MY,22);
+  g.addColorStop(0,'rgba(255,235,160,.65)');
+  g.addColorStop(1,'rgba(255,100,80,0)');
+  ctx.beginPath();ctx.arc(MX,MY,22,0,Math.PI*2);
+  ctx.fillStyle=g;ctx.fill();
+}
+
+// ── Click web burst ──
+let clickBursts=[];
+document.addEventListener('click',e=>{
+  clickBursts.push({x:e.clientX,y:e.clientY,life:1,angle:Math.random()*Math.PI*2});
+});
+function drawClickBursts(){
+  clickBursts=clickBursts.filter(b=>b.life>0);
+  clickBursts.forEach(b=>{
+    ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle);
+    for(let r=0;r<8;r++){
+      ctx.rotate(Math.PI/4);
+      const len=40*(1-b.life*.3)*b.life;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(len,0);
+      ctx.strokeStyle=`rgba(240,220,160,${b.life*.7})`;
+      ctx.lineWidth=1.2;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(len*.3,0);ctx.lineTo(len*.5,len*.2);
+      ctx.strokeStyle=`rgba(240,220,160,${b.life*.4})`;
+      ctx.lineWidth=.8;ctx.stroke();
     }
-    // glow at cursor
-    const grd=ctx.createRadialGradient(mousePosX,mousePosY,0,mousePosX,mousePosY,18);
-    grd.addColorStop(0,'rgba(255,240,180,.6)');
-    grd.addColorStop(1,'rgba(255,240,180,0)');
-    ctx.beginPath();ctx.arc(mousePosX,mousePosY,18,0,Math.PI*2);
-    ctx.fillStyle=grd;ctx.fill();
-  }
-  ctx.restore();
-
-  // Click web ray
-  if(webRayAlpha>0){
-    ctx.save();
-    ctx.globalAlpha=webRayAlpha;
-    ctx.beginPath();ctx.moveTo(handX,handY);ctx.lineTo(webRayTarget.x,webRayTarget.y);
-    ctx.strokeStyle='rgba(255,250,200,.8)';ctx.lineWidth=2.5;ctx.stroke();
-    webRayAlpha-=.025;
     ctx.restore();
-  }
+    b.life-=.035;
+  });
+}
 
-  // Spidey target: follows mouse loosely + scroll offset
-  const targetX = mousePosX*.25 + canvas.width*.62;
-  const targetY = mousePosY*.18 + 180 - scroll*.15;
+// ── Main loop ──
+let last=0;
+function render(ts){
+  const t=ts*.001;
+  ctx.clearRect(0,0,C.width,C.height);
 
-  spidey.x += (targetX - spidey.x)*.04;
-  spidey.y += (targetY - spidey.y)*.04;
+  // background gradient
+  const bg=ctx.createRadialGradient(C.width*.5,C.height*.3,0,C.width*.5,C.height*.5,C.height*.9);
+  bg.addColorStop(0,'rgba(15,5,30,.3)');bg.addColorStop(1,'rgba(6,7,14,0)');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,C.width,C.height);
 
-  // Swing angle based on movement
-  const velX = targetX - spidey.x;
-  const bodyAngle = velX * 0.003;
+  // web network
+  drawWebNetwork(t);
 
-  // Draw web rope from top of screen to spidey
-  ctx.save();
-  const anchorX = spidey.x + 30;
-  const anchorY = 0;
-  const ropeSteps = 10;
-  const ropeDrop = spidey.y;
-  for(let i=0;i<ropeSteps-1;i++){
-    const p0=i/ropeSteps, p1=(i+1)/ropeSteps;
-    const rx0=anchorX, ry0=anchorY+ropeDrop*p0 + Math.sin(p0*Math.PI)*20;
-    const rx1=anchorX, ry1=anchorY+ropeDrop*p1 + Math.sin(p1*Math.PI)*20;
-    const ra=(1-i/ropeSteps)*.45;
-    ctx.beginPath();ctx.moveTo(rx0,ry0);ctx.lineTo(rx1,ry1);
-    ctx.strokeStyle=`rgba(220,215,175,${ra})`;
-    ctx.lineWidth=1.5; ctx.stroke();
-  }
-  ctx.restore();
+  // Spidey target: blend mouse influence + fixed position
+  const scrollFrac=window.scrollY/(document.body.scrollHeight-innerHeight||1);
+  const tX=MX*.18+C.width*.65;
+  const tY=MY*.14+C.height*.22+scrollFrac*C.height*.05;
+  sp.x+=(tX-sp.x)*.035;
+  sp.y+=(tY-sp.y)*.035;
+
+  // Web rope from ceiling to spidey
+  const ancX=sp.x+12;
+  drawWebRope(ancX,-5,ancX,sp.y-35,.55);
+  // second anchor rope (diagonal)
+  drawWebRope(C.width*.9,0,sp.x+14,sp.y-35,.25);
+
+  // Compute hand position for web thread (left arm extended toward top-left)
+  const bodyTilt=(tX-sp.x)*.003;
+  const armAngle=-1.1+bodyTilt;
+  const handDist=38;
+  const handX=sp.x-12+Math.cos(armAngle)*handDist*sp.scale||1;
+  const handY=sp.y-2 +Math.sin(armAngle)*handDist*(sp.scale||1);
+
+  // Web to mouse
+  drawMouseWeb(handX,handY,t);
+
+  // Click bursts
+  drawClickBursts();
 
   // Draw Spidey
-  const drawScale = .9 + Math.sin(t*.7)*.03;
-  drawSpidey(spidey.x, spidey.y, drawScale, bodyAngle);
+  const sc=.95+Math.sin(t*.5)*.02;
+  drawAmazingSpidey(sp.x,sp.y,sc,bodyTilt,t);
 
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);
 
-/* ════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    SCROLL REVEAL
-════════════════════════════════════════════════════ */
-const io = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);} });
-},{threshold:.1});
+══════════════════════════════════════════════════ */
+const io=new IntersectionObserver(e=>{
+  e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');io.unobserve(en.target);}});
+},{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-/* ════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    COUNTERS
-════════════════════════════════════════════════════ */
-function animateCount(el){
-  const target=parseFloat(el.dataset.count);
-  const isFloat=!!el.dataset.float;
-  const plus=!!el.dataset.plus;
-  const dur=1800, start=performance.now();
-  (function tick(now){
-    const p=Math.min((now-start)/dur,1);
-    const e=1-Math.pow(1-p,3);
-    const v=e*target;
-    el.textContent=(isFloat?v.toFixed(2):Math.floor(v))+(plus&&p>=1?'+':'');
-    if(p<1) requestAnimationFrame(tick);
-    else el.textContent=(isFloat?target.toFixed(2):target)+(plus?'+':'');
-  })(start);
+══════════════════════════════════════════════════ */
+function countUp(el){
+  const t=parseFloat(el.dataset.count);
+  const isF=!!el.dataset.float,plus=!!el.dataset.plus;
+  const dur=1800,s=performance.now();
+  (function f(now){
+    const p=Math.min((now-s)/dur,1),e=1-(1-p)**3,v=e*t;
+    el.textContent=(isF?v.toFixed(2):Math.floor(v))+(plus&&p>=1?'+':'');
+    if(p<1) requestAnimationFrame(f);
+    else el.textContent=(isF?t.toFixed(2):t)+(plus?'+':'');
+  })(s);
 }
-setTimeout(()=>document.querySelectorAll('[data-count]').forEach(animateCount),1100);
+setTimeout(()=>document.querySelectorAll('[data-count]').forEach(countUp),1000);
 </script>
 </body>
 </html>
